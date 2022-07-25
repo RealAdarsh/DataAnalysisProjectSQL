@@ -20,3 +20,22 @@ Create a Portal to do data Analysis at end.
 - https://www.census2011.co.in/district.php
 - https://www.census2011.co.in/literacy.php
 
+## Learnings
+
+- Create Table
+- Insert Data into Table
+- Count number of rows from the table. 
+- Sum Function 
+- Average Function 
+- Round Function 
+- Ascending Order
+- Descending Order 
+- HAVING vs WHERE 
+- Order By 
+- Group by 
+- like function 
+- Union 
+- Distinct 
+- VARCHAR vs NVARCHAR: Nvarchar uses two bytes per character whereas varchar uses 1 bytes per character. Nvarchar can store unicode data, whereas varchar will convert the data in ASCII and then stores it. In NVARCHAR avoids encoding conversion every time we read or write to the database. 
+
+

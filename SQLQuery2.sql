@@ -49,4 +49,48 @@ SELECT TOP 3 state, avg(sex_ratio) as sexRatioAvg FROM PortfolioProject..Data1 G
 
 -- TOP and Bottom 3 states in Literacy State 
 
-CREATE TABLE top
+DROP TABLE IF EXISTS #topstates
+
+CREATE TABLE #topStates (
+	
+	state NVARCHAR(255),
+	topstates float
+
+)
+
+CREATE TABLE #bottomStates ( 
+	
+	state NVARCHAR(255), 
+	bottomstates FLOAT
+)
+
+
+INSERT INTO #topstates
+SELECT TOP 3 state, round(avg(literacy),0) avg_literacy_ratio FROM PortfolioProject..Data1
+GROUP BY State ORDER BY avg_literacy_ratio DESC;
+
+INSERT INTO #bottomStates
+SELECT TOP 3 state, round(avg(literacy),0) AS avg_litercay_rate FROM PortfolioProject..Data1
+GROUP BY State ORDER BY avg_litercay_rate ASC; 
+
+
+
+SELECT * FROM #topStates
+SELECT * FROM #bottomStates
+
+-- Union Operator to combine both the results 
+
+SELECT * FROM #topStates UNION SELECT * FROM #bottomStates
+
+-- Using Subqueries 
+
+SELECT * FROM (SELECT TOP 2 state, topstates FROM #topStates ORDER BY topstates DESC) A UNION 
+SELECT * FROM (SELECT TOP 2 state, bottomstates FROM #bottomStates ORDER BY bottomstates ASC) B ORDER BY topstates DESC; 
+
+-- Filter out states starting with Letter A or B
+
+SELECT DISTINCT State FROM PortfolioProject..Data1 where lower(State) like 'a%' or lower(state) like 'b%'
+
+-- Filter out states starting with Letter N and ending with letter D
+
+SELECT DISTINCT state FROM PortfolioProject..Data1 WHERE lower(state) like 'n%' and lower(state) like '%d'
