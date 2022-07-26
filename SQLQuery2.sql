@@ -94,3 +94,64 @@ SELECT DISTINCT State FROM PortfolioProject..Data1 where lower(State) like 'a%' 
 -- Filter out states starting with Letter N and ending with letter D
 
 SELECT DISTINCT state FROM PortfolioProject..Data1 WHERE lower(state) like 'n%' and lower(state) like '%d'
+
+-- Joining both table 
+
+SELECT a.District, a.state, a.sex_ratio, b.population FROM PortfolioProject..Data1 a INNER JOIN PortfolioProject..Data2 b on a.state=b.state; 
+
+-- Finding total numbers of male and female 
+
+SELECT d.District, d.state, d.population-d.males as Females, d.males FROM 
+(SELECT c.District, c.state, C.Population, round(c.population/(c.sex_ratio +1),0) as males FROM
+(SELECT a.District, a.state, a.sex_ratio/1000 as Sex_Ratio, b.population FROM PortfolioProject..Data1 a INNER JOIN PortfolioProject..Data2 b on a.District=b.District) c) d; 
+
+
+-- Finding total number of males and females in the state 
+SELECT d.state, sum(d.males) as Total_Males, sum(d.females) as Total_Females FROM 
+(SELECT c.District, c.state, round(c.population/(c.sex_ratio +1),0) as males, round((c.population *c.sex_ratio)/(c.sex_ratio+1),0) as females  FROM 
+(SELECT a.District, a.state, (a.sex_ratio/1000) as sex_ratio, b.population FROM PortfolioProject..Data1 a INNER JOIN PortfolioProject..Data2 b on a.district=b.District) c) d GROUP BY d.State;
+
+
+-- Total Literacy rate 
+SELECT c.state, sum(c.LiteratePopulation) TotalLiteratePopulation FROM 
+(SELECT a.district, a.state, round((a.literacy*b.population)/100,0) as LiteratePopulation FROM PortfolioProject..Data1 a INNER JOIN PortfolioProject..Data2 b on a.District=b.District) c GROUP BY State;
+
+
+-- Population in Previous Census 
+
+SELECT a.district, a.state, a.growth, round(b.population/(a.Growth+1),0) as OldPopulation, b.Population FROM PortfolioProject..Data1 a INNER JOIN PortfolioProject..Data2 b ON a.District=b.District
+
+
+-- Average Growth of the state
+
+SELECT c.state, SUM(c.population) as NowPopulation, SUM(C.OldPopulation) as OldPopulation FROM 
+(SELECT a.district, a.state, a.growth, round(b.population/(a.Growth+1),0) as OldPopulation, b.Population FROM PortfolioProject..Data1 a INNER JOIN PortfolioProject..Data2 b ON a.District=b.District)c GROUP BY State
+
+
+-- Total Population of India in Previous Census and this census
+SELECT SUM(d.NowPopulation) as CurrentCensus, SUM(d.OldPopulation) as OldCensus FROM
+(SELECT c.state, SUM(c.population) as NowPopulation, SUM(C.OldPopulation) as OldPopulation FROM 
+(SELECT a.district, a.state, a.growth, round(b.population/(a.Growth+1),0) as OldPopulation, b.Population FROM PortfolioProject..Data1 a INNER JOIN PortfolioProject..Data2 b ON a.District=b.District)c GROUP BY State) d
+
+
+-- Area Density
+
+
+SELECT round((h.currentCensus/h.total_area),0) as current_density, round((h.oldCensus/h.total_area),0) as oldDensity FROM 
+(SELECT f.CurrentCensus, f.OldCensus, g.total_area FROM 
+
+(SELECT '1' as keyy, e.* FROM 
+(SELECT SUM(d.NowPopulation) as CurrentCensus, SUM(d.OldPopulation) as OldCensus FROM
+(SELECT c.state, SUM(c.population) as NowPopulation, SUM(C.OldPopulation) as OldPopulation FROM 
+(SELECT a.district, a.state, a.growth, round(b.population/(a.Growth+1),0) as OldPopulation, b.Population FROM PortfolioProject..Data1 a INNER JOIN PortfolioProject..Data2 b ON a.District=b.District)c GROUP BY State) d) e) f
+
+INNER JOIN 
+
+(SELECT '1' as keyy,  SUM(area_km2) as total_area FROM PortfolioProject..Data2) g  ON f.keyy=g.keyy) h
+
+
+-- Window Function 
+
+-- OUTPUT TOP 3 district from each state with highest literacy rate
+
+-- SELECT district, state, literacy, rank() over 
