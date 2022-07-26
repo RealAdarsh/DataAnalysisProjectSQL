@@ -37,5 +37,9 @@ Create a Portal to do data Analysis at end.
 - Union 
 - Distinct 
 - VARCHAR vs NVARCHAR: Nvarchar uses two bytes per character whereas varchar uses 1 bytes per character. Nvarchar can store unicode data, whereas varchar will convert the data in ASCII and then stores it. In NVARCHAR avoids encoding conversion every time we read or write to the database. 
+- JOINS
+- INNER JOIN
+- OUTER JOIN - LEFT, RIGHT
+- Advanced Functions - naming different queries and then performing the actions. 
 
 
