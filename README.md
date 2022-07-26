@@ -2,8 +2,7 @@
 # Government Portal For Data Analysis using Data Set
 
 I have data set for population, literacy rate and growth rate in Excel Sheet, Need to do data Analysis using these data. 
-
-Create a Portal to do data Analysis at end. 
+ 
 
 
 ## Roadmap
@@ -12,7 +11,6 @@ Create a Portal to do data Analysis at end.
 - Installing Microsoft SQL Server Manager. 
 - Working on data sets. 
 - Doing data analysis through SQL Server. 
-- Creating portal. 
 
 
 ## Reference
@@ -41,5 +39,10 @@ Create a Portal to do data Analysis at end.
 - INNER JOIN
 - OUTER JOIN - LEFT, RIGHT
 - Advanced Functions - naming different queries and then performing the actions. 
-
-
+- Window Function 
+- Rank()
+- OVER()
+- Row_number()
+- Dense_Rank()
+- Lag()
+- Lead()

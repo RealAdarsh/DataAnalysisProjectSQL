@@ -152,6 +152,35 @@ INNER JOIN
 
 -- Window Function 
 
--- OUTPUT TOP 3 district from each state with highest literacy rate
+-- Maximum Population of District in each state 
 
--- SELECT district, state, literacy, rank() over 
+SELECT *, max(population) OVER(PARTITION BY state) as Max_Population FROM PortfolioProject..Data2 
+
+-- Defining Row number for every row
+
+SELECT * , ROW_NUMBER() OVER(ORDER BY STATE ASC) as RowNumber FROM PortfolioProject..Data1 
+
+-- Defining row no. for every state 
+
+SELECT *, ROW_NUMBER() OVER(Partition By STATE ORDER BY District ASC) as RowNumber FROM PortfolioProject..Data1
+
+-- Top 2 district with highest literacy in every state 
+
+SELECT e.District, e.State, e.Literacy, e.RowNumber FROM 
+(SELECT *, ROW_NUMBER() OVER(PARTITION BY state ORDER BY Literacy DESC) as RowNumber FROM PortfolioProject..Data1) e WHERE e.RowNumber < 3
+
+-- Top 2 District with lowest Growth Rate in each state 
+
+SELECT e.* FROM 
+(SELECT *, RANK() OVER(PARTITION BY state ORDER BY Growth ASC) as rnk FROM PortfolioProject..Data1) e WHERE rnk < 3
+
+-- Check if previous state has low population or high population in ascending order 
+
+SELECT a.*, LAG(a.TotalPopulation) OVER(ORDER BY State ASC) as Details, 
+CASE WHEN a.TotalPopulation > LAG(a.TotalPopulation) OVER(ORDER BY State ASC) THEN 'Higher than Previous State'
+	WHEN a.TotalPopulation < LAG(a.TotalPopulation) OVER(ORDER BY State ASC) THEN 'Lower than Previous State'
+	WHEN a.TotalPopulation = LAG(a.TotalPopulation) OVER(ORDER BY State ASC) THEN 'Equal to Previous State'
+end as PreviousDetails 
+FROM 
+(SELECT State, SUM(Population) as TotalPopulation FROM PortfolioProject..Data2 GROUP BY STATE) a
+
